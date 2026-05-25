@@ -1,0 +1,6 @@
+@passcode_ticket_HostAddress = http://localhost:5210
+
+GET {{passcode_ticket_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
