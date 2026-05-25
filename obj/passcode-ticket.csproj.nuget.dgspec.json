@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\documentos\\dev\\angular\\passcode-ticket\\passcode-ticket.csproj": {}
+    "D:\\documentos\\dev\\dotnet\\passcode-ticket\\passcode-ticket.csproj": {}
   },
   "projects": {
-    "D:\\documentos\\dev\\angular\\passcode-ticket\\passcode-ticket.csproj": {
+    "D:\\documentos\\dev\\dotnet\\passcode-ticket\\passcode-ticket.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\documentos\\dev\\angular\\passcode-ticket\\passcode-ticket.csproj",
+        "projectUniqueName": "D:\\documentos\\dev\\dotnet\\passcode-ticket\\passcode-ticket.csproj",
         "projectName": "passcode-ticket",
-        "projectPath": "D:\\documentos\\dev\\angular\\passcode-ticket\\passcode-ticket.csproj",
+        "projectPath": "D:\\documentos\\dev\\dotnet\\passcode-ticket\\passcode-ticket.csproj",
         "packagesPath": "C:\\Users\\ratoj\\.nuget\\packages\\",
-        "outputPath": "D:\\documentos\\dev\\angular\\passcode-ticket\\obj\\",
+        "outputPath": "D:\\documentos\\dev\\dotnet\\passcode-ticket\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\ratoj\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -47,6 +47,20 @@
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
               "version": "[10.0.5, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[9.0.0, )"
+            },
+            "Pomelo.EntityFrameworkCore.MySql": {
+              "target": "Package",
+              "version": "[9.0.0, )"
             }
           },
           "imports": [
