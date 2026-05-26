@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using passcode_ticket.Migrations;
 using passcode_ticket.Models;
 using ProjetoDBZ.Data;
 
@@ -102,9 +103,24 @@ namespace passcode_ticket.Controllers
             }
 
             next.Status = "Called";
-            _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
             return Ok(next);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<Ticket>> finishTicket(int id)
+        {
+            var foundTicket = await _context.Tickets.FindAsync(id);
+            
+            if(foundTicket == null)
+                return NotFound("Ticket not found");
+
+            foundTicket.Status = "finished";
+            foundTicket.FinishedAt = DateTime.Now;
+
+            await _context.SaveChangesAsync();
+            return Ok($"Ticket with Id {id} finished successfully");
         }
     }
 }
