@@ -39,5 +39,72 @@ namespace passcode_ticket.Controllers
 
             return Ok(ticket);
         }
+
+        [HttpPost("call")]
+        public  async Task<ActionResult<Ticket>> LastTicket()
+        {
+            var emergency = await _context.Tickets
+                .Where(t => t.Type == "Emergency" && t.Status == "waiting")
+                .OrderBy(t => t.CreatedAt)
+                .FirstOrDefaultAsync();
+
+            if(emergency != null)
+            {
+                emergency.Status = "called";
+                await _context.SaveChangesAsync();
+                return Ok(emergency);
+            }
+
+            var lastCalls = await _context.Tickets
+                .Where(t => t.Status == "called")
+                .OrderByDescending(t => t.CreatedAt)
+                .Take(2)
+                .ToListAsync();
+
+            int followedPreferential = 0;
+            foreach(var t in lastCalls)
+            {
+                if(t.Type == "preferential")
+                    followedPreferential++;
+                else
+                    break;
+            }
+
+            Ticket next = null;
+
+            if(followedPreferential >= 2)
+            {
+                next = await _context.Tickets
+                    .Where(t => t.Type == "Normal" && t.Status == "waiting")
+                    .OrderBy(t => t.CreatedAt)
+                    .FirstOrDefaultAsync();
+            }
+
+            if(next == null)
+            {
+                next = await _context.Tickets
+                    .Where(t => t.Type == "Preferential" && t.Status == "waiting")
+                    .OrderBy(t => t.CreatedAt)
+                    .FirstOrDefaultAsync();
+            }
+            
+            if(next == null)
+            {
+                next = await _context.Tickets
+                    .Where(t => t.Type == "Normal" && t.Status == "waiting")
+                    .OrderBy(t => t.CreatedAt)
+                    .FirstOrDefaultAsync();
+            }
+
+            if(next == null)
+            {
+                return NotFound("None passcode waiting");
+            }
+
+            next.Status = "Called";
+            _context.SaveChangesAsync();
+
+            return Ok(next);
+        }
     }
 }
