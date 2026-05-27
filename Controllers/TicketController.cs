@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using passcode_ticket.Hubs;
 using passcode_ticket.Migrations;
 using passcode_ticket.Models;
 using ProjetoDBZ.Data;
@@ -16,9 +18,11 @@ namespace passcode_ticket.Controllers
     public class TicketController : ControllerBase
     {
         private readonly AppDbContext _context;
-        public TicketController(AppDbContext appDbContext)
+        private readonly IHubContext<PanelHub> _hubContext;
+        public TicketController(AppDbContext appDbContext, IHubContext<PanelHub> hubContext)
         {
             _context = appDbContext;
+            _hubContext = hubContext;
         }
 
         [HttpPost]
@@ -105,6 +109,7 @@ namespace passcode_ticket.Controllers
             next.Status = "Called";
             await _context.SaveChangesAsync();
 
+            await notifyPanel();
             return Ok(next);
         }
 
@@ -121,6 +126,17 @@ namespace passcode_ticket.Controllers
 
             await _context.SaveChangesAsync();
             return Ok($"Ticket with Id {id} finished successfully");
+        }
+
+        private async Task notifyPanel()
+        {
+            var lastCalls = await _context.Tickets
+                .Where(t => t.Status == "called")
+                .OrderByDescending(t => t.CreatedAt)
+                .Take(4)
+                .ToListAsync();
+
+            await _hubContext.Clients.All.SendAsync("lastCalls", lastCalls);
         }
     }
 }
