@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using passcode_ticket.Hubs;
 using ProjetoDBZ.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,7 +16,11 @@ builder.Configuration.GetConnectionString("AppConnectionString");
 builder.Services.AddDbContext<AppDbContext>(options =>
 options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
+builder.Services.AddSignalR();
+
 var app = builder.Build();
+
+app.MapHub<PanelHub>("/hubs/panel");
 
 
 // Configure the HTTP request pipeline.
