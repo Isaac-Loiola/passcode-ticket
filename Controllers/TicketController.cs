@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.EntityFrameworkCore.Migrations;
+using passcode_ticket.DTOs;
 using passcode_ticket.Hubs;
 using passcode_ticket.Migrations;
 using passcode_ticket.Models;
@@ -45,8 +48,16 @@ namespace passcode_ticket.Controllers
             return Ok(ticket);
         }
 
+        public async Task createHistory(int user, int ticket)
+        {
+            TicketHistory history = new TicketHistory(user, ticket);
+            _context.TicketHistory.Add(history);
+
+            await _context.SaveChangesAsync();
+        }
+
         [HttpPost("call")]
-        public  async Task<ActionResult<Ticket>> LastTicket()
+        public  async Task<ActionResult<Ticket>> LastTicket([FromBody] CallTicketDTO dto)
         {
             var emergency = await _context.Tickets
                 .Where(t => t.Type == "Emergency" && t.Status == "waiting")
@@ -108,6 +119,8 @@ namespace passcode_ticket.Controllers
 
             next.Status = "Called";
             await _context.SaveChangesAsync();
+
+            await createHistory(dto.IdUser, next.Id);
 
             await notifyPanel();
             return Ok(next);
