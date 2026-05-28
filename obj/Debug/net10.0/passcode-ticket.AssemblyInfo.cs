@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("passcode-ticket")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+17a4f0bec4b89ea8f70e4489139f481c8ac5fe6d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a23225c3332be0451d87a06374713e965948eda2")]
 [assembly: System.Reflection.AssemblyProductAttribute("passcode-ticket")]
 [assembly: System.Reflection.AssemblyTitleAttribute("passcode-ticket")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
