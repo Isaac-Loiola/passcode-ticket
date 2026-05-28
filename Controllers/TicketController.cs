@@ -3,15 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.IdentityModel.Tokens;
 using passcode_ticket.DTOs;
 using passcode_ticket.Hubs;
 using passcode_ticket.Migrations;
 using passcode_ticket.Models;
+using passcode_ticket.Services;
 using ProjetoDBZ.Data;
 
 namespace passcode_ticket.Controllers
@@ -22,10 +25,12 @@ namespace passcode_ticket.Controllers
     {
         private readonly AppDbContext _context;
         private readonly IHubContext<PanelHub> _hubContext;
-        public TicketController(AppDbContext appDbContext, IHubContext<PanelHub> hubContext)
+        private readonly TokenService _tokenService;
+        public TicketController(AppDbContext appDbContext, IHubContext<PanelHub> hubContext, TokenService tokenService)
         {
             _context = appDbContext;
             _hubContext = hubContext;
+            _tokenService = tokenService;
         }
 
         [HttpPost]
@@ -48,9 +53,9 @@ namespace passcode_ticket.Controllers
             return Ok(ticket);
         }
 
-        public async Task createHistory(int user, int ticket)
+        public async Task createHistory(int user, int ticket, string sector)
         {
-            TicketHistory history = new TicketHistory(user, ticket);
+            TicketHistory history = new TicketHistory(user, ticket, sector);
             _context.TicketHistory.Add(history);
 
             await _context.SaveChangesAsync();
@@ -120,7 +125,7 @@ namespace passcode_ticket.Controllers
             next.Status = "Called";
             await _context.SaveChangesAsync();
 
-            await createHistory(dto.IdUser, next.Id);
+            await createHistory(dto.IdUser, next.Id, dto.Sector);
 
             await notifyPanel();
             return Ok(next);

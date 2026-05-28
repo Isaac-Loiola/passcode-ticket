@@ -1,18 +1,18 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Antiforgery;
 
 namespace passcode_ticket.DTOs
 {
-    public class CallTicketDTO
+    public class AuthDTO
     {
         [Required]
-        public int IdUser {get;set;}
+        public string Email { get; set; }
 
         [Required]
-        public string Sector {get;set;}
+        public string Password { get; set; }
     }
 }

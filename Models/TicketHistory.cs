@@ -17,10 +17,11 @@ namespace passcode_ticket.Models
         public DateTime CalledAt{get;set;} = DateTime.Now;
         public string Sector{get;set;}
 
-        public TicketHistory(int user, int ticket)
+        public TicketHistory(int user, int ticket, string sector)
         {
             this.TicketId = ticket;
             this.UserId = user;
+            this.Sector = sector;
         } 
     }
 

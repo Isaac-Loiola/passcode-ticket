@@ -46,5 +46,6 @@ namespace passcode_ticket.Services
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
     }
 }
